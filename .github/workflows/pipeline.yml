@@ -56,6 +56,14 @@ jobs:
           heroku_email: "niko.tiaskorpi@gmail.com"
           procfile: "web: npm run start-prod"
           healthcheck: "https://pokemonsapplication351.herokuapp.com/health"
+          
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+            severity: error
+            details: Test Failed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     if: ${{ github.event_name == 'push' && contains(github.event.commits, '#skip') == false }}  # ${{!contains(github.event.commits, '#skip')}} && 
@@ -67,3 +75,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+            severity: info
+            details: Test Succeeded!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
