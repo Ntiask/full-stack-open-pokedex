@@ -44,7 +44,7 @@ jobs:
           wait-on: http://localhost:5000
 
   build:
-    if: ${{ github.event_name == 'push' && contains(github.event.commits, '#skip') == false }}
+    if: ${{ github.event_name == 'push' && contains(toJson(github.event.commits.*.message), '#skip') == false }}
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
     steps:
